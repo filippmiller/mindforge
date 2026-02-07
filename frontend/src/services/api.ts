@@ -1,6 +1,6 @@
 import type { Session, WhitepaperData } from "../types";
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 export async function createSession(name?: string): Promise<Session> {
   const res = await fetch(`${API_BASE}/sessions`, {
