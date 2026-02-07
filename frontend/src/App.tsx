@@ -157,20 +157,22 @@ export default function App() {
 
   const sendMessage = useCallback(
     async (text: string, isVoice: boolean, rawTranscript?: string) => {
-      if (!store.currentSession || !text.trim()) return;
+      // Read fresh state to avoid stale closures after session creation
+      const currentState = useSessionStore.getState();
+      if (!currentState.currentSession || !text.trim()) return;
 
       // Double-submit prevention
-      if (store.orbState !== "idle") return;
+      if (currentState.orbState !== "idle") return;
 
-      store.setOrbState("thinking");
-      store.clearStreamingText();
-      store.addConversationEntry("user", text);
-      store.addThinkingBlock({ phase: "user_message", content: text });
-      store.setLastMessage({ text, isVoice, rawTranscript });
+      currentState.setOrbState("thinking");
+      currentState.clearStreamingText();
+      currentState.addConversationEntry("user", text);
+      currentState.addThinkingBlock({ phase: "user_message", content: text });
+      currentState.setLastMessage({ text, isVoice, rawTranscript });
       setHasError(false);
 
-      const sessionId = store.currentSession.id;
-      const isFirstMessage = store.thinkingBlocks.filter(b => b.phase === "user_message").length <= 1;
+      const sessionId = currentState.currentSession.id;
+      const isFirstMessage = currentState.thinkingBlocks.filter(b => b.phase === "user_message").length <= 1;
 
       streamBrainstorm(
         sessionId,
