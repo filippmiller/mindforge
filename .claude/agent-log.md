@@ -41,3 +41,42 @@ Extracted full MindForge project (40 files, ~3,150 lines) from a shared Claude.a
 → `.claude/sessions/2026-02-07-164000.md`
 
 ---
+
+## [2026-02-07 ~17:30] — Frontend Deployment & Feature Improvements
+
+**Area:** Frontend/Backend/Infrastructure
+**Type:** feature + fix
+
+### Files Changed
+- `frontend/src/types/speech.d.ts` — Created: Web Speech API type declarations
+- `frontend/src/vite-env.d.ts` — Created: Vite env var types
+- `frontend/src/hooks/useVoiceInput.ts` — Fixed SpeechRecognitionErrorEvent type
+- `frontend/src/services/api.ts` — Configurable API URL + renameSession
+- `frontend/src/components/Toast.tsx` — Created: toast notification system
+- `frontend/src/components/WhitepaperModal.tsx` — Created: whitepaper generation modal
+- `frontend/src/components/SessionSidebar.tsx` — Added delete button with confirmation
+- `frontend/src/App.tsx` — Integrated new components, double-submit prevention
+- `backend/main.py` — CORS origins hardening
+- `backend/services/ai_engine.py` — Error handling in streaming
+- `backend/routers/sessions.py` — PATCH rename endpoint
+- `backend/routers/brainstorm.py` — Input validation
+
+### Functions/Symbols Modified
+- `API_BASE` (`api.ts`) — now reads from `import.meta.env.VITE_API_URL`
+- `renameSession()` (`api.ts`) — new, PATCH session rename
+- `toast()` / `ToastContainer` (`Toast.tsx`) — new, singleton notification system
+- `WhitepaperModal` (`WhitepaperModal.tsx`) — new, generate/view/copy/download whitepaper
+- `SessionSidebar` (`SessionSidebar.tsx`) — added `onDeleteSession` prop + delete UI
+- `App` (`App.tsx`) — integrated WhitepaperModal, ToastContainer, double-submit guard
+- `app` (`main.py`) — CORS origins as filtered list
+- `stream_brainstorm()` (`ai_engine.py`) — two-level try/except error handling
+- `rename_session()` (`sessions.py`) — new, PATCH endpoint
+- `handle_message()` (`brainstorm.py`) — input validation (empty + 10k limit)
+
+### Summary
+Deployed frontend to Railway. Fixed TypeScript build failure (Web Speech API types). Connected frontend to backend via `VITE_API_URL`. Implemented `/wizzard` improvements: toast notifications, whitepaper modal, session delete, double-submit prevention, input validation, CORS hardening, error handling. Both services verified online.
+
+### Session Notes
+→ `.claude/sessions/2026-02-07-session2.md`
+
+---
