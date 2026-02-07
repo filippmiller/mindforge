@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "description": "MindForge Brainstorming Rules — Self-evolving question bank and thinking guidelines",
+  "categories": {
+    "audience": {
+      "label": "Target Audience",
+      "base_questions": [
+        "Who exactly will use this website? Can you describe 2-3 specific types of people?",
+        "What is the age range and technical skill level of your users?",
+        "How will users discover this website for the first time?",
+        "What device will most users be on — mobile, desktop, or both equally?"
+      ],
+      "thinking_rules": [
+        "If the user describes a broad audience like 'everyone', push back — no website serves everyone well.",
+        "If the audience is non-technical, flag that every interaction must be extremely simple.",
+        "Consider accessibility needs based on audience demographics."
+      ]
+    },
+    "purpose": {
+      "label": "Core Purpose",
+      "base_questions": [
+        "In one sentence, what does this website DO for someone who visits it?",
+        "What is the ONE action you want every visitor to take?",
+        "Why would someone choose this over an existing solution?",
+        "What happens if this website doesn't exist — what do people do instead?"
+      ],
+      "thinking_rules": [
+        "If the purpose is vague, the website will be vague. Push for a crisp single-sentence mission.",
+        "Look for competing products and ask how this is different.",
+        "If there are multiple purposes, help prioritize — a website that tries to do everything does nothing well."
+      ]
+    },
+    "features": {
+      "label": "Features & Functionality",
+      "base_questions": [
+        "What are the top 3 things a user should be able to DO on this website?",
+        "Does this need user accounts and login?",
+        "Is there any content that needs to be searchable or filterable?",
+        "Will users create, upload, or submit any data?"
+      ],
+      "thinking_rules": [
+        "Always ask about search — most websites need it and most people forget to mention it.",
+        "If there are user accounts, immediately think about: registration, login, password reset, profile management, email verification.",
+        "Every form mentioned needs validation rules, error states, and success states.",
+        "If payments are involved, this dramatically increases complexity — flag immediately."
+      ]
+    },
+    "pages": {
+      "label": "Pages & Structure",
+      "base_questions": [
+        "What pages do you see when you close your eyes and imagine the website?",
+        "What does the homepage show — and what's its primary call-to-action?",
+        "Is there an 'About' or 'Contact' page? What information lives there?",
+        "Will there be a blog, news section, or any regularly updated content?"
+      ],
+      "thinking_rules": [
+        "Every website needs: homepage, about, contact, privacy policy, terms of service at minimum.",
+        "If there's dynamic content, there must be a content management approach.",
+        "Navigation should never be deeper than 3 levels.",
+        "Consider 404 page, error pages, loading states — these are part of the experience."
+      ]
+    },
+    "user_flows": {
+      "label": "User Journeys",
+      "base_questions": [
+        "Walk me through what happens from the moment someone lands on the homepage.",
+        "What's the signup/registration process? What information do you collect?",
+        "If a user gets confused, how do they get help?",
+        "What happens AFTER the main action — is there a confirmation, email, dashboard?"
+      ],
+      "thinking_rules": [
+        "Every flow needs: entry point, happy path, error path, and exit point.",
+        "If there's checkout or signup, think about abandonment — what brings people back?",
+        "Consider the 'first visit' experience vs 'returning user' experience.",
+        "Mobile flows should be considered separately — they're often different."
+      ]
+    },
+    "design": {
+      "label": "Design & Branding",
+      "base_questions": [
+        "What feeling should someone get when they land on your website?",
+        "Name 2-3 websites you admire the look of — what specifically do you like about them?",
+        "Do you have existing brand colors, logos, or style guidelines?",
+        "Should it feel professional/corporate, casual/friendly, bold/edgy, or minimal/clean?"
+      ],
+      "thinking_rules": [
+        "If the user says 'clean and modern', push deeper — that means nothing. Everyone wants clean and modern.",
+        "Ask about specific emotional responses: trust, excitement, urgency, calm.",
+        "Dark vs light theme has UX implications beyond aesthetics.",
+        "Typography choices signal brand personality — ask about it."
+      ]
+    },
+    "data": {
+      "label": "Data & Content",
+      "base_questions": [
+        "What data does this website store? Think about every piece of information.",
+        "Where does the content come from — who writes/creates it?",
+        "How often does content change?",
+        "Is there any data that connects to external services or APIs?"
+      ],
+      "thinking_rules": [
+        "If user data is stored, GDPR/privacy compliance must be discussed.",
+        "Every piece of stored data needs: creation, reading, updating, deletion (CRUD).",
+        "Consider data backup and recovery from day one.",
+        "If content comes from users, moderation is needed."
+      ]
+    },
+    "security": {
+      "label": "Security & Privacy",
+      "base_questions": [
+        "Will users enter sensitive information like passwords, payment details, or personal data?",
+        "Who should have admin access, and what can they do?",
+        "Do you need different permission levels (admin, editor, viewer)?",
+        "Is there any regulatory compliance needed (GDPR, HIPAA, PCI-DSS)?"
+      ],
+      "thinking_rules": [
+        "ALWAYS think about: SQL injection, XSS, CSRF, authentication bypass.",
+        "Passwords must be hashed, never stored in plain text.",
+        "API endpoints must have rate limiting.",
+        "File uploads are a major attack vector — always validate.",
+        "HTTPS is non-negotiable.",
+        "Session management: timeout, invalidation, secure cookies.",
+        "Admin panels need extra protection: IP whitelisting, 2FA consideration."
+      ]
+    },
+    "admin": {
+      "label": "Administration",
+      "base_questions": [
+        "What does the website owner need to change on a regular basis?",
+        "Do you need to see analytics or reports inside the website?",
+        "How many people will manage this website?",
+        "What happens when content needs to be updated urgently?"
+      ],
+      "thinking_rules": [
+        "Every website needs an admin section — even if the user hasn't thought about it.",
+        "Content management should be simple enough that non-technical people can use it.",
+        "Consider: who can publish vs who can draft?",
+        "Audit logging — who changed what and when."
+      ]
+    },
+    "technical": {
+      "label": "Technical Considerations",
+      "base_questions": [
+        "Does this need to integrate with any other services (email, payment, social media)?",
+        "How many users do you expect initially? In 6 months? In a year?",
+        "Does the website need to work offline or in low-connectivity situations?",
+        "Are there any specific performance requirements (fast loading, real-time updates)?"
+      ],
+      "thinking_rules": [
+        "If expecting growth, architecture needs to be scalable from the start.",
+        "Third-party integrations add complexity and potential failure points.",
+        "Consider SEO requirements early — they affect architecture.",
+        "Email delivery is surprisingly complex — use a service, don't roll your own."
+      ]
+    },
+    "business": {
+      "label": "Business Model",
+      "base_questions": [
+        "How does this website make money or provide value to its owner?",
+        "Is there a monetization strategy (subscriptions, ads, commissions, one-time sales)?",
+        "What's the launch timeline you're thinking about?",
+        "What's the budget context — startup, enterprise, side project?"
+      ],
+      "thinking_rules": [
+        "If there's no business model, ask why the website exists — there must be a value proposition.",
+        "Subscription models need: billing, plan management, upgrade/downgrade, cancellation flows.",
+        "Free tiers vs paid tiers: what's the differentiator?",
+        "Consider launch strategy as part of the website — landing page, waitlist, beta access."
+      ]
+    }
+  },
+  "meta_rules": {
+    "question_selection": [
+      "Never ask more than 5-7 questions per turn.",
+      "Prioritize questions about gaps — what the user HASN'T mentioned is more important than what they have.",
+      "Ask the most impactful questions first — ones that could change the entire direction.",
+      "If the user answered a question vaguely, rephrase and ask again with more specificity.",
+      "Don't repeat questions the user has already clearly answered."
+    ],
+    "thinking_behavior": [
+      "Always start by summarizing what you understood — let the user correct misunderstandings early.",
+      "When you find a contradiction in what the user said, surface it immediately.",
+      "Connect dots the user hasn't connected — 'You mentioned X and also Y — have you considered how these interact?'",
+      "If the idea is fundamentally flawed, say so diplomatically but clearly.",
+      "Track confidence levels: HIGH (user was specific), MEDIUM (inferred from context), LOW (assumed/guessed)."
+    ],
+    "self_learning": [
+      "When a user raises a concern or question that isn't in the rules, flag it for addition.",
+      "When a question consistently leads to valuable insights, increase its priority.",
+      "When a question consistently gets skipped or provides no value, decrease its priority.",
+      "New rules should be categorized and formatted like existing rules.",
+      "Rules should be universal — not specific to one project."
+    ]
+  }
+}

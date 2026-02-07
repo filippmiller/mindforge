@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --forge-bg: #0a0a0f;
+  --forge-surface: #12121a;
+  --forge-border: #1e1e2e;
+  --forge-cyan: #00f0ff;
+  --forge-amber: #ffaa00;
+  --forge-green: #00ff88;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--forge-bg);
+  color: #e0e0e8;
+  font-family: "DM Sans", sans-serif;
+  overflow-x: hidden;
+}
+
+/* Background gradient mesh */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 240, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(100, 50, 200, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(0, 100, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Voice Orb styles */
+.voice-orb {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, rgba(0, 240, 255, 0.05) 70%);
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.voice-orb::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  animation: orbRing 3s ease-in-out infinite;
+}
+
+.voice-orb::after {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.08);
+  animation: orbRing 3s ease-in-out infinite 0.5s;
+}
+
+.voice-orb.listening {
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.6) 0%, rgba(0, 240, 255, 0.15) 70%);
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.4), 0 0 80px rgba(0, 240, 255, 0.2);
+}
+
+.voice-orb.processing {
+  background: radial-gradient(circle, rgba(255, 170, 0, 0.4) 0%, rgba(255, 170, 0, 0.1) 70%);
+  border-color: rgba(255, 170, 0, 0.6);
+  animation: orbPulse 1s ease-in-out infinite;
+}
+
+@keyframes orbRing {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.9); }
+}
+
+/* Thinking stream animations */
+.thinking-line {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Typewriter cursor */
+.typewriter-cursor::after {
+  content: "▊";
+  color: var(--forge-cyan);
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Glass panels */
+.glass-panel {
+  background: rgba(18, 18, 26, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 30, 46, 0.8);
+  border-radius: 12px;
+}
+
+/* Section tag badges */
+.tag-analysis { color: var(--forge-cyan); border-color: rgba(0, 240, 255, 0.3); background: rgba(0, 240, 255, 0.08); }
+.tag-gap { color: var(--forge-amber); border-color: rgba(255, 170, 0, 0.3); background: rgba(255, 170, 0, 0.08); }
+.tag-insight { color: var(--forge-green); border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.08); }
+.tag-question { color: #c084fc; border-color: rgba(192, 132, 252, 0.3); background: rgba(192, 132, 252, 0.08); }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Progress ring */
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
