@@ -31,7 +31,7 @@ export default function App() {
   const [hasError, setHasError] = useState(false);
 
   const voice = useVoiceInput({
-    language: "ru-RU",
+    language: navigator.language || "en-US",
     continuous: true,
   });
 
@@ -286,14 +286,17 @@ export default function App() {
   }, [voice, store, handleNewSession, sendMessage]);
 
   const handleTextSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       if (textInput.trim()) {
+        if (!store.currentSession) {
+          await handleNewSession();
+        }
         sendMessage(textInput, false);
         setTextInput("");
       }
     },
-    [textInput, sendMessage],
+    [textInput, sendMessage, store, handleNewSession],
   );
 
   const handleRetry = useCallback(() => {
