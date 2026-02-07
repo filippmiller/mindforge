@@ -4,12 +4,15 @@ import { useVoiceInput } from "./hooks/useVoiceInput";
 import { VoiceOrb } from "./components/VoiceOrb";
 import { ThinkingStream } from "./components/ThinkingStream";
 import { WhitepaperPreview } from "./components/WhitepaperPreview";
+import { WhitepaperModal } from "./components/WhitepaperModal";
 import { ProgressIndicator } from "./components/ProgressIndicator";
 import { SessionSidebar } from "./components/SessionSidebar";
 import { TranscriptDisplay } from "./components/TranscriptDisplay";
+import { ToastContainer, toast } from "./components/Toast";
 import {
   createSession,
   listSessions,
+  deleteSession,
   streamBrainstorm,
   getWhitepaper,
 } from "./services/api";
@@ -20,6 +23,7 @@ export default function App() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [textInput, setTextInput] = useState("");
   const [showTextInput, setShowTextInput] = useState(false);
+  const [showWhitepaperModal, setShowWhitepaperModal] = useState(false);
 
   const voice = useVoiceInput({
     language: "en-US",
@@ -61,9 +65,33 @@ export default function App() {
     [store],
   );
 
+  const handleDeleteSession = useCallback(
+    async (session: Session) => {
+      try {
+        await deleteSession(session.id);
+        store.setSessions(store.sessions.filter((s) => s.id !== session.id));
+        if (store.currentSession?.id === session.id) {
+          store.setCurrentSession(null);
+          store.clearThinkingBlocks();
+          store.clearStreamingText();
+          store.clearConversation();
+          store.setWhitepaperSections({});
+          store.setCompletionPct(0);
+        }
+        toast("Project deleted", "info");
+      } catch {
+        toast("Failed to delete project", "error");
+      }
+    },
+    [store],
+  );
+
   const sendMessage = useCallback(
     async (text: string, isVoice: boolean, rawTranscript?: string) => {
       if (!store.currentSession || !text.trim()) return;
+
+      // Double-submit prevention
+      if (store.orbState !== "idle") return;
 
       store.setOrbState("thinking");
       store.clearStreamingText();
@@ -131,6 +159,7 @@ export default function App() {
           console.error("Stream error:", err);
           store.setOrbState("idle");
           store.clearStreamingText();
+          toast("Something went wrong. Please try again.", "error");
         },
       );
     },
@@ -174,6 +203,15 @@ export default function App() {
     <div className="h-screen flex flex-col overflow-hidden">
       <div className="bg-mesh" />
 
+      {/* Toast notifications */}
+      <ToastContainer />
+
+      {/* Whitepaper modal */}
+      <WhitepaperModal
+        isOpen={showWhitepaperModal}
+        onClose={() => setShowWhitepaperModal(false)}
+      />
+
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 py-3 border-b border-forge-border/50">
         <div className="flex items-center gap-3">
@@ -199,6 +237,14 @@ export default function App() {
               {store.currentSession.name}
             </span>
           )}
+          {store.completionPct > 0 && (
+            <button
+              onClick={() => setShowWhitepaperModal(true)}
+              className="px-3 py-1.5 text-xs font-mono border border-forge-cyan/30 bg-forge-cyan/10 rounded-md text-forge-cyan hover:bg-forge-cyan/20 transition-colors"
+            >
+              Generate Whitepaper
+            </button>
+          )}
           <button
             onClick={() => setShowTextInput(!showTextInput)}
             className="text-forge-muted hover:text-forge-text transition-colors p-1"
@@ -213,7 +259,7 @@ export default function App() {
 
       {/* Main content */}
       <div className="relative z-10 flex flex-1 overflow-hidden">
-        {/* Left sidebar — sessions + whitepaper */}
+        {/* Left sidebar -- sessions + whitepaper */}
         {showSidebar && (
           <aside className="w-56 border-r border-forge-border/50 flex flex-col shrink-0">
             <div className="flex-1 border-b border-forge-border/50 overflow-hidden">
@@ -222,6 +268,7 @@ export default function App() {
                 currentSessionId={store.currentSession?.id || null}
                 onSelectSession={handleSelectSession}
                 onNewSession={handleNewSession}
+                onDeleteSession={handleDeleteSession}
               />
             </div>
             <div className="h-[45%] overflow-hidden">
@@ -230,7 +277,7 @@ export default function App() {
           </aside>
         )}
 
-        {/* Center — thinking stream + orb */}
+        {/* Center -- thinking stream + orb */}
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Progress indicator */}
           {store.currentSession && (
@@ -262,7 +309,8 @@ export default function App() {
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2.5 bg-forge-cyan/10 border border-forge-cyan/30 rounded-lg text-forge-cyan text-sm font-mono hover:bg-forge-cyan/20 transition-colors"
+                  disabled={store.orbState !== "idle"}
+                  className="px-4 py-2.5 bg-forge-cyan/10 border border-forge-cyan/30 rounded-lg text-forge-cyan text-sm font-mono hover:bg-forge-cyan/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Send
                 </button>

@@ -20,9 +20,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+origins = [settings.FRONTEND_URL, "http://localhost:5173"]
+# Filter out empty strings
+origins = [o for o in origins if o]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -35,6 +35,15 @@ export async function generateFinalWhitepaper(sessionId: string): Promise<{ whit
   return res.json();
 }
 
+export async function renameSession(id: string, name: string): Promise<Session> {
+  const res = await fetch(`${API_BASE}/sessions/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
+  return res.json();
+}
+
 export async function getHistory(sessionId: string) {
   const res = await fetch(`${API_BASE}/brainstorm/${sessionId}/history`);
   return res.json();

@@ -1,6 +1,6 @@
 import json
 import aiosqlite
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from database.db import DB_PATH
@@ -16,6 +16,11 @@ async def process_message(session_id: str, message: MessageInput):
     Process a user message through the brainstorming engine.
     Returns SSE stream with thinking visualization.
     """
+    if not message.text or not message.text.strip():
+        raise HTTPException(status_code=400, detail="Message text cannot be empty")
+    if len(message.text) > 10000:
+        raise HTTPException(status_code=400, detail="Message too long (max 10000 characters)")
+
     return StreamingResponse(
         stream_brainstorm(
             session_id=session_id,

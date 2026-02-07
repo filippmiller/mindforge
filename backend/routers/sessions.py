@@ -55,6 +55,23 @@ async def get_session(session_id: str):
     return SessionResponse(**dict(row))
 
 
+@router.patch("/{session_id}")
+async def rename_session(session_id: str, data: SessionCreate):
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "UPDATE sessions SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (data.name, session_id),
+        )
+        await db.commit()
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM sessions WHERE id = ?", (session_id,))
+        row = await cursor.fetchone()
+    if not row:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Session not found")
+    return SessionResponse(**dict(row))
+
+
 @router.delete("/{session_id}")
 async def delete_session(session_id: str):
     async with aiosqlite.connect(DB_PATH) as db:

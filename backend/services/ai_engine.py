@@ -88,109 +88,117 @@ async def stream_brainstorm(
     Main brainstorming pipeline with SSE streaming.
     Yields SSE-formatted events as the AI thinks.
     """
-    # Step 1: Clean transcript if from voice
-    cleaned_text = user_text
-    if is_voice and raw_transcript:
-        yield f"event: status\ndata: {json.dumps({'status': 'cleaning_transcript'})}\n\n"
-        cleaned_text = await clean_transcript(raw_transcript)
-        yield f"event: transcript\ndata: {json.dumps({'raw': raw_transcript, 'cleaned': cleaned_text})}\n\n"
+    try:
+        # Step 1: Clean transcript if from voice
+        cleaned_text = user_text
+        if is_voice and raw_transcript:
+            yield f"event: status\ndata: {json.dumps({'status': 'cleaning_transcript'})}\n\n"
+            cleaned_text = await clean_transcript(raw_transcript)
+            yield f"event: transcript\ndata: {json.dumps({'raw': raw_transcript, 'cleaned': cleaned_text})}\n\n"
 
-    # Step 2: Save user turn
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute(
-            "INSERT INTO conversation_turns (session_id, role, raw_transcript, cleaned_text) VALUES (?, 'user', ?, ?)",
-            (session_id, raw_transcript, cleaned_text),
-        )
-        await db.commit()
+        # Step 2: Save user turn
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "INSERT INTO conversation_turns (session_id, role, raw_transcript, cleaned_text) VALUES (?, 'user', ?, ?)",
+                (session_id, raw_transcript, cleaned_text),
+            )
+            await db.commit()
 
-    # Step 3: Build system prompt with rules + state
-    yield f"event: status\ndata: {json.dumps({'status': 'loading_rules'})}\n\n"
-    rules_context = await get_full_rules_context()
-    session_state = await get_session_state(session_id)
-    system_prompt = build_system_prompt(rules_context, session_state)
+        # Step 3: Build system prompt with rules + state
+        yield f"event: status\ndata: {json.dumps({'status': 'loading_rules'})}\n\n"
+        rules_context = await get_full_rules_context()
+        session_state = await get_session_state(session_id)
+        system_prompt = build_system_prompt(rules_context, session_state)
 
-    # Step 4: Build messages
-    messages = await build_messages(session_id, cleaned_text)
+        # Step 4: Build messages
+        messages = await build_messages(session_id, cleaned_text)
 
-    # Step 5: Stream from Claude
-    yield f"event: status\ndata: {json.dumps({'status': 'thinking'})}\n\n"
+        # Step 5: Stream from Claude
+        yield f"event: status\ndata: {json.dumps({'status': 'thinking'})}\n\n"
 
-    client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+        client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
 
-    full_response = ""
+        full_response = ""
 
-    async with client.messages.stream(
-        model=settings.BRAINSTORM_MODEL,
-        max_tokens=4000,
-        system=system_prompt,
-        messages=messages,
-    ) as stream:
-        async for text in stream.text_stream:
-            full_response += text
-            yield f"event: token\ndata: {json.dumps({'text': text})}\n\n"
-
-    # Step 6: Parse structured response
-    yield f"event: status\ndata: {json.dumps({'status': 'processing'})}\n\n"
-
-    analysis = parse_section(full_response, "analysis")
-    gaps = parse_section(full_response, "gaps")
-    insights = parse_section(full_response, "insights")
-    questions = parse_section(full_response, "questions")
-    wp_update_raw = parse_section(full_response, "whitepaper_update")
-    new_rules_raw = parse_section(full_response, "new_rules")
-
-    # Send parsed sections
-    if analysis:
-        yield f"event: analysis\ndata: {json.dumps({'content': analysis})}\n\n"
-    if gaps:
-        yield f"event: gaps\ndata: {json.dumps({'content': gaps})}\n\n"
-    if insights:
-        yield f"event: insights\ndata: {json.dumps({'content': insights})}\n\n"
-    if questions:
-        yield f"event: questions\ndata: {json.dumps({'content': questions})}\n\n"
-
-    # Step 7: Update whitepaper
-    if wp_update_raw:
         try:
-            wp_updates = json.loads(wp_update_raw)
-            await update_whitepaper(session_id, wp_updates)
-            yield f"event: whitepaper_update\ndata: {json.dumps(wp_updates)}\n\n"
-        except json.JSONDecodeError:
-            pass
+            async with client.messages.stream(
+                model=settings.BRAINSTORM_MODEL,
+                max_tokens=4000,
+                system=system_prompt,
+                messages=messages,
+            ) as stream:
+                async for text in stream.text_stream:
+                    full_response += text
+                    yield f"event: token\ndata: {json.dumps({'text': text})}\n\n"
+        except Exception as e:
+            yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+            return
 
-    # Step 8: Learn new rules
-    if new_rules_raw:
-        try:
-            new_rules = json.loads(new_rules_raw)
-            for rule in new_rules:
-                if "category" in rule and "rule_text" in rule:
-                    await add_learned_rule(rule["category"], rule["rule_text"], session_id)
-            if new_rules:
-                yield f"event: new_rules\ndata: {json.dumps({'count': len(new_rules), 'rules': new_rules})}\n\n"
-        except json.JSONDecodeError:
-            pass
+        # Step 6: Parse structured response
+        yield f"event: status\ndata: {json.dumps({'status': 'processing'})}\n\n"
 
-    # Step 9: Save assistant turn
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute(
-            """INSERT INTO conversation_turns 
-            (session_id, role, cleaned_text, analysis, gaps, insights, questions, whitepaper_updates) 
-            VALUES (?, 'assistant', ?, ?, ?, ?, ?, ?)""",
-            (session_id, full_response, analysis, gaps, insights, questions, wp_update_raw),
-        )
-        await db.commit()
+        analysis = parse_section(full_response, "analysis")
+        gaps = parse_section(full_response, "gaps")
+        insights = parse_section(full_response, "insights")
+        questions = parse_section(full_response, "questions")
+        wp_update_raw = parse_section(full_response, "whitepaper_update")
+        new_rules_raw = parse_section(full_response, "new_rules")
 
-    # Step 10: Calculate and update completion
-    completion = await calculate_completion(session_id)
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute(
-            "UPDATE sessions SET completion_pct = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-            (completion, session_id),
-        )
-        await db.commit()
+        # Send parsed sections
+        if analysis:
+            yield f"event: analysis\ndata: {json.dumps({'content': analysis})}\n\n"
+        if gaps:
+            yield f"event: gaps\ndata: {json.dumps({'content': gaps})}\n\n"
+        if insights:
+            yield f"event: insights\ndata: {json.dumps({'content': insights})}\n\n"
+        if questions:
+            yield f"event: questions\ndata: {json.dumps({'content': questions})}\n\n"
 
-    yield f"event: completion\ndata: {json.dumps({'pct': completion})}\n\n"
-    yield f"event: done\ndata: {json.dumps({'session_id': session_id})}\n\n"
+        # Step 7: Update whitepaper
+        if wp_update_raw:
+            try:
+                wp_updates = json.loads(wp_update_raw)
+                await update_whitepaper(session_id, wp_updates)
+                yield f"event: whitepaper_update\ndata: {json.dumps(wp_updates)}\n\n"
+            except json.JSONDecodeError:
+                pass
+
+        # Step 8: Learn new rules
+        if new_rules_raw:
+            try:
+                new_rules = json.loads(new_rules_raw)
+                for rule in new_rules:
+                    if "category" in rule and "rule_text" in rule:
+                        await add_learned_rule(rule["category"], rule["rule_text"], session_id)
+                if new_rules:
+                    yield f"event: new_rules\ndata: {json.dumps({'count': len(new_rules), 'rules': new_rules})}\n\n"
+            except json.JSONDecodeError:
+                pass
+
+        # Step 9: Save assistant turn
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                """INSERT INTO conversation_turns
+                (session_id, role, cleaned_text, analysis, gaps, insights, questions, whitepaper_updates)
+                VALUES (?, 'assistant', ?, ?, ?, ?, ?, ?)""",
+                (session_id, full_response, analysis, gaps, insights, questions, wp_update_raw),
+            )
+            await db.commit()
+
+        # Step 10: Calculate and update completion
+        completion = await calculate_completion(session_id)
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "UPDATE sessions SET completion_pct = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (completion, session_id),
+            )
+            await db.commit()
+
+        yield f"event: completion\ndata: {json.dumps({'pct': completion})}\n\n"
+        yield f"event: done\ndata: {json.dumps({'session_id': session_id})}\n\n"
+
+    except Exception as e:
+        yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
 
 
 async def update_whitepaper(session_id: str, updates: dict):
