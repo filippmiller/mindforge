@@ -49,6 +49,58 @@ export async function getHistory(sessionId: string) {
   return res.json();
 }
 
+export function streamCompetitorAnalysis(
+  sessionId: string,
+  query: string,
+  urls?: string[],
+  onEvent: (event: { type: string; data: string }) => void = () => {},
+  onDone: () => void = () => {},
+  onError: (err: Error) => void = () => {},
+) {
+  const abortController = new AbortController();
+
+  fetch(`${API_BASE}/competitor/${sessionId}/analyze`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, urls }),
+    signal: abortController.signal,
+  })
+    .then(async (response) => {
+      if (!response.ok) throw new Error("Competitor analysis failed");
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No reader");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        let currentEvent = "";
+        for (const line of lines) {
+          if (line.startsWith("event: ")) {
+            currentEvent = line.slice(7).trim();
+          } else if (line.startsWith("data: ") && currentEvent) {
+            onEvent({ type: currentEvent, data: line.slice(6) });
+            currentEvent = "";
+          }
+        }
+      }
+
+      onDone();
+    })
+    .catch((err) => {
+      if (err.name !== "AbortError") onError(err);
+    });
+
+  return () => abortController.abort();
+}
+
 export function streamBrainstorm(
   sessionId: string,
   text: string,

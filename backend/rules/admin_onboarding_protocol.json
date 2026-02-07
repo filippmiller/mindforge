@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "protocol": "admin_onboarding",
+  "description": "Mandatory protocol for websites that include an admin panel. Ensures proper client account setup with security-first approach.",
+  "trigger_conditions": [
+    "Website has an admin panel or dashboard",
+    "Client needs to manage content, users, or settings",
+    "Any CMS or back-office functionality is present",
+    "E-commerce admin area",
+    "SaaS with admin controls"
+  ],
+  "steps": {
+    "1_detect_admin_need": {
+      "description": "Identify early in the conversation whether the site needs an admin panel",
+      "questions": [
+        "Will you or your team need to manage content, products, or users on this site?",
+        "Do you need a dashboard to view orders, messages, or analytics?",
+        "How many people on your team will need access to the backend?"
+      ],
+      "auto_trigger_keywords": [
+        "admin", "dashboard", "manage", "CMS", "backend", "control panel",
+        "products management", "content editing", "orders", "user management"
+      ]
+    },
+    "2_collect_client_credentials": {
+      "description": "Gather the client's information for their admin account",
+      "required_fields": {
+        "email": {
+          "question": "What email should I use for your admin account?",
+          "validation": "Must be a valid, accessible email — this will be used for login and password recovery",
+          "importance": "CRITICAL"
+        },
+        "full_name": {
+          "question": "What name should appear on the admin account?",
+          "validation": "For display in the admin panel and audit logs",
+          "importance": "HIGH"
+        },
+        "role": {
+          "question": "What level of access do you need? (Super Admin / Admin / Editor)",
+          "validation": "Determines permissions scope",
+          "importance": "HIGH",
+          "default": "Super Admin"
+        }
+      },
+      "optional_fields": {
+        "phone": {
+          "question": "Phone number for 2FA (if enabled)?",
+          "importance": "MEDIUM"
+        },
+        "additional_admins": {
+          "question": "Are there other team members who need admin access? I'll need their emails and roles too.",
+          "importance": "MEDIUM"
+        }
+      }
+    },
+    "3_generate_temp_credentials": {
+      "description": "Create a temporary secure password for initial login",
+      "rules": [
+        "Generate a cryptographically random temporary password (min 16 chars)",
+        "Password must include: uppercase, lowercase, digits, special characters",
+        "Password has a 24-hour expiration window",
+        "Must be changed on first login — NO EXCEPTIONS",
+        "Temporary password is delivered via secure channel (email to client)"
+      ],
+      "implementation_notes": {
+        "password_format": "Random 16+ character string with mixed character classes",
+        "storage": "Hashed with bcrypt/argon2, never stored in plaintext",
+        "flag": "force_password_change = true on the user record",
+        "delivery": "Send via email with secure link, or display once and require acknowledgment"
+      }
+    },
+    "4_first_login_flow": {
+      "description": "What happens when the client logs in for the first time",
+      "sequence": [
+        "Client enters temporary credentials",
+        "System validates and immediately redirects to password change screen",
+        "Client MUST set a new password (old temp password cannot be reused)",
+        "New password validated against security policy (min 8 chars, no common passwords)",
+        "Optional: prompt to set up 2FA",
+        "On success: redirect to admin dashboard with a welcome tour"
+      ],
+      "security_requirements": [
+        "Temp password becomes invalid after first successful login",
+        "Failed attempts are rate-limited (max 5 per 15 minutes)",
+        "Account locks after 10 failed attempts, requires email unlock",
+        "Session is invalidated if password change is abandoned mid-flow"
+      ]
+    },
+    "5_document_in_whitepaper": {
+      "description": "Include admin onboarding in the generated whitepaper",
+      "whitepaper_section": "admin_onboarding",
+      "content_template": [
+        "Admin account will be created for: {client_email}",
+        "Role: {role}",
+        "Temporary password will be provided via secure email",
+        "Password MUST be changed on first login",
+        "Additional admin accounts: {additional_admins_list}",
+        "Security features: rate limiting, account lockout, optional 2FA"
+      ]
+    }
+  },
+  "conversation_integration": {
+    "when_to_ask": "Phase 3 (Structure) or Phase 4 (Details) — after basic features are established",
+    "how_to_ask": "Naturally integrate into the conversation when discussing admin/management features. Don't make it feel like a form — weave it into the brainstorm.",
+    "example_prompt": "Since your site will have a management dashboard, I'll need to set up your admin account. What email should I use? I'll create a secure temporary password that you'll change on first login.",
+    "if_client_resists": "Explain that this is a security best practice — temporary passwords ensure that only the intended person gains access, and forced password change prevents credential sharing."
+  },
+  "developer_checklist": {
+    "database": [
+      "Users table with: id, email, name, password_hash, role, force_password_change, created_at",
+      "Login attempts table for rate limiting",
+      "Password history table (prevent reuse of last 5 passwords)"
+    ],
+    "api_endpoints": [
+      "POST /auth/login — authenticate with email + password",
+      "POST /auth/change-password — mandatory on first login",
+      "POST /auth/forgot-password — email recovery flow",
+      "POST /auth/setup-2fa — optional 2FA enrollment"
+    ],
+    "email_templates": [
+      "Welcome email with temporary credentials",
+      "Password changed confirmation",
+      "Account locked notification",
+      "2FA setup confirmation"
+    ],
+    "security": [
+      "HTTPS only for all auth endpoints",
+      "Secure, HttpOnly, SameSite cookies for sessions",
+      "CORS properly configured",
+      "Rate limiting on all auth endpoints",
+      "Password hashing with bcrypt (cost factor >= 12) or argon2id"
+    ]
+  }
+}

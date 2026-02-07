@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
 from database.db import init_db
-from routers import sessions, brainstorm, whitepaper
+from routers import sessions, brainstorm, whitepaper, competitor
 
 
 @asynccontextmanager
@@ -35,6 +35,7 @@ app.add_middleware(
 app.include_router(sessions.router)
 app.include_router(brainstorm.router)
 app.include_router(whitepaper.router)
+app.include_router(competitor.router)
 
 
 @app.get("/api/health")

@@ -7,15 +7,54 @@ from typing import AsyncGenerator
 from config import settings
 from database.db import DB_PATH
 from services.rules_engine import get_full_rules_context, add_learned_rule
+from services.niche_classifier import get_niche_context
 from services.voice_processor import clean_transcript
 from prompts.brainstorm_system import build_system_prompt
 from prompts.whitepaper_prompt import WHITEPAPER_SYNTHESIS_PROMPT, WHITEPAPER_SYSTEM
+
+
+async def get_session_niche(session_id: str) -> str | None:
+    """Get the niche type for a session, if classified."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "SELECT niche_type FROM sessions WHERE id = ?", (session_id,)
+        )
+        row = await cursor.fetchone()
+    return row[0] if row and row[0] else None
+
+
+async def set_session_niche(session_id: str, niche_type: str):
+    """Set the niche type for a session."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "UPDATE sessions SET niche_type = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (niche_type, session_id),
+        )
+        await db.commit()
+
+
+async def update_session_phase(session_id: str, phase: int):
+    """Update the current conversation phase."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "UPDATE sessions SET current_phase = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (phase, session_id),
+        )
+        await db.commit()
 
 
 async def get_session_state(session_id: str) -> str:
     """Build current session state string for the system prompt."""
     async with aiosqlite.connect(DB_PATH) as db:
         db.row_factory = aiosqlite.Row
+
+        # Get session info
+        cursor = await db.execute(
+            "SELECT niche_type, current_phase FROM sessions WHERE id = ?", (session_id,)
+        )
+        session_row = await cursor.fetchone()
+        niche_type = session_row["niche_type"] if session_row else None
+        current_phase = session_row["current_phase"] if session_row else 1
 
         # Get whitepaper state
         cursor = await db.execute(
@@ -31,10 +70,19 @@ async def get_session_state(session_id: str) -> str:
         )
         turns = await cursor.fetchall()
 
-    lines = ["## Current Whitepaper State\n"]
+    lines = []
+
+    # Session metadata
+    if niche_type:
+        lines.append(f"**Classified niche**: {niche_type}")
+    lines.append(f"**Current phase**: {current_phase}")
+    lines.append(f"**Conversation turns so far**: {len(turns)}")
+    lines.append("")
+
+    lines.append("## Current Whitepaper State\n")
     if whitepaper_content:
         for section, content in whitepaper_content.items():
-            status = "✅ Has content" if content else "❌ Empty"
+            status = "HAS CONTENT" if content else "EMPTY"
             lines.append(f"- **{section}**: {status}")
             if content:
                 lines.append(f"  Current: {content[:200]}...")
@@ -104,11 +152,18 @@ async def stream_brainstorm(
             )
             await db.commit()
 
-        # Step 3: Build system prompt with rules + state
+        # Step 3: Build system prompt with rules + state + niche context
         yield f"event: status\ndata: {json.dumps({'status': 'loading_rules'})}\n\n"
         rules_context = await get_full_rules_context()
         session_state = await get_session_state(session_id)
-        system_prompt = build_system_prompt(rules_context, session_state)
+
+        # Load niche context if session has been classified
+        niche_type = await get_session_niche(session_id)
+        niche_context = ""
+        if niche_type:
+            niche_context = get_niche_context(niche_type) or ""
+
+        system_prompt = build_system_prompt(rules_context, session_state, niche_context)
 
         # Step 4: Build messages
         messages = await build_messages(session_id, cleaned_text)
@@ -143,6 +198,7 @@ async def stream_brainstorm(
         questions = parse_section(full_response, "questions")
         wp_update_raw = parse_section(full_response, "whitepaper_update")
         new_rules_raw = parse_section(full_response, "new_rules")
+        phase_info_raw = parse_section(full_response, "phase_info")
 
         # Send parsed sections
         if analysis:
@@ -175,7 +231,24 @@ async def stream_brainstorm(
             except json.JSONDecodeError:
                 pass
 
-        # Step 9: Save assistant turn
+        # Step 9: Process phase info and niche classification
+        if phase_info_raw:
+            try:
+                phase_info = json.loads(phase_info_raw)
+                current_phase = phase_info.get("current_phase", 1)
+                await update_session_phase(session_id, current_phase)
+                yield f"event: phase_info\ndata: {json.dumps(phase_info)}\n\n"
+            except json.JSONDecodeError:
+                pass
+
+        # Auto-detect niche from analysis on first message (if not already set)
+        if not niche_type and analysis:
+            detected_niche = detect_niche_from_analysis(analysis)
+            if detected_niche:
+                await set_session_niche(session_id, detected_niche)
+                yield f"event: niche_classified\ndata: {json.dumps({'niche': detected_niche})}\n\n"
+
+        # Step 10: Save assistant turn
         async with aiosqlite.connect(DB_PATH) as db:
             await db.execute(
                 """INSERT INTO conversation_turns
@@ -185,7 +258,7 @@ async def stream_brainstorm(
             )
             await db.commit()
 
-        # Step 10: Calculate and update completion
+        # Step 11: Calculate and update completion
         completion = await calculate_completion(session_id)
         async with aiosqlite.connect(DB_PATH) as db:
             await db.execute(
@@ -199,6 +272,25 @@ async def stream_brainstorm(
 
     except Exception as e:
         yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+
+
+def detect_niche_from_analysis(analysis_text: str) -> str | None:
+    """Try to detect the niche type from the AI's analysis text."""
+    from services.niche_classifier import get_all_niche_keywords
+
+    analysis_lower = analysis_text.lower()
+    niche_keywords = get_all_niche_keywords()
+
+    scores: dict[str, int] = {}
+    for niche_key, keywords in niche_keywords.items():
+        score = sum(1 for kw in keywords if kw in analysis_lower)
+        if score > 0:
+            scores[niche_key] = score
+
+    if not scores:
+        return None
+
+    return max(scores, key=scores.get)
 
 
 async def update_whitepaper(session_id: str, updates: dict):

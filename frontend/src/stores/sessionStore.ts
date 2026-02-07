@@ -1,15 +1,11 @@
 import { create } from "zustand";
-import type { Session, OrbState, ThinkingPhase } from "../types";
+import type { Session, OrbState, ThinkingPhase, PhaseInfo } from "../types";
 
-interface ThinkingBlock {
+export interface ThinkingBlock {
   id: string;
   phase: ThinkingPhase;
   content: string;
   timestamp: number;
-}
-
-interface StreamToken {
-  text: string;
 }
 
 interface SessionStore {
@@ -32,6 +28,7 @@ interface SessionStore {
   // Thinking blocks
   thinkingBlocks: ThinkingBlock[];
   addThinkingBlock: (block: Omit<ThinkingBlock, "id" | "timestamp">) => void;
+  setThinkingBlocks: (blocks: ThinkingBlock[]) => void;
   clearThinkingBlocks: () => void;
 
   // Whitepaper
@@ -47,6 +44,14 @@ interface SessionStore {
   conversationHistory: Array<{ role: string; text: string; timestamp: number }>;
   addConversationEntry: (role: string, text: string) => void;
   clearConversation: () => void;
+
+  // Phase info
+  phaseInfo: PhaseInfo | null;
+  setPhaseInfo: (info: PhaseInfo | null) => void;
+
+  // Retry support
+  lastMessage: { text: string; isVoice: boolean; rawTranscript?: string } | null;
+  setLastMessage: (msg: { text: string; isVoice: boolean; rawTranscript?: string } | null) => void;
 }
 
 export const useSessionStore = create<SessionStore>((set) => ({
@@ -78,6 +83,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
         { ...block, id: crypto.randomUUID(), timestamp: Date.now() },
       ],
     })),
+  setThinkingBlocks: (blocks) => set({ thinkingBlocks: blocks }),
   clearThinkingBlocks: () => set({ thinkingBlocks: [] }),
 
   whitepaperSections: {},
@@ -99,4 +105,10 @@ export const useSessionStore = create<SessionStore>((set) => ({
       ],
     })),
   clearConversation: () => set({ conversationHistory: [] }),
+
+  phaseInfo: null,
+  setPhaseInfo: (phaseInfo) => set({ phaseInfo }),
+
+  lastMessage: null,
+  setLastMessage: (lastMessage) => set({ lastMessage }),
 }));

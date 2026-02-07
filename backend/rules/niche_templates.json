@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "description": "MindForge Niche Templates — Pre-built intelligence for common business types",
+  "niches": {
+    "local_service": {
+      "label": "Local Service Business",
+      "description": "Businesses providing services in a specific geographic area (plumbers, electricians, repair shops, cleaning services, etc.)",
+      "keywords": ["repair", "fix", "service", "plumber", "electrician", "cleaning", "maintenance", "install", "local", "area", "city", "emergency", "call", "home"],
+      "suggested_pages": [
+        {"name": "Home", "purpose": "Hero with main CTA (call/book), trust signals, service highlights", "priority": "must"},
+        {"name": "Services", "purpose": "Detailed list of all services with descriptions and pricing", "priority": "must"},
+        {"name": "Areas We Serve", "purpose": "Geographic coverage map/list for local SEO", "priority": "should"},
+        {"name": "Pricing", "purpose": "Transparent pricing or 'starting from' rates", "priority": "should"},
+        {"name": "About Us", "purpose": "Team, experience, certifications, story", "priority": "must"},
+        {"name": "Reviews/Testimonials", "purpose": "Social proof from real customers", "priority": "should"},
+        {"name": "Contact", "purpose": "Phone, email, form, map, working hours", "priority": "must"},
+        {"name": "FAQ", "purpose": "Common questions to reduce support calls", "priority": "nice"},
+        {"name": "Blog", "purpose": "SEO content and maintenance tips", "priority": "nice"},
+        {"name": "Emergency Service", "purpose": "24/7 availability page with prominent phone number", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "Click-to-call button", "priority": "must", "complexity": "simple"},
+        {"name": "Service request form", "priority": "must", "complexity": "simple"},
+        {"name": "Google Maps integration", "priority": "must", "complexity": "simple"},
+        {"name": "Working hours display", "priority": "must", "complexity": "simple"},
+        {"name": "Google Reviews widget", "priority": "should", "complexity": "medium"},
+        {"name": "Online booking/scheduling", "priority": "should", "complexity": "complex"},
+        {"name": "WhatsApp/Telegram chat button", "priority": "should", "complexity": "simple"},
+        {"name": "Before/after photo gallery", "priority": "nice", "complexity": "simple"},
+        {"name": "Cost calculator", "priority": "nice", "complexity": "medium"},
+        {"name": "Service area checker", "priority": "nice", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "What specific services do you offer? List them all, even small ones.",
+        "What geographic area do you cover? Specific cities, districts, or radius?",
+        "Do you offer emergency/urgent service? If so, what are the hours?",
+        "How do customers currently contact you? Phone, WhatsApp, email?",
+        "Do you want customers to book appointments online, or just call?",
+        "Do you have photos of completed work (before/after)?",
+        "Do you have existing Google reviews or testimonials?"
+      ],
+      "design_hints": {
+        "mood": "trustworthy, professional, approachable",
+        "colors": "blues, greens (trust), with warm accents (orange/amber for CTAs)",
+        "typography": "clean sans-serif, large phone numbers",
+        "key_element": "Phone number and CTA must be visible without scrolling",
+        "imagery": "real photos of team/work preferred over stock"
+      },
+      "admin_needs": [
+        "Manage service list and descriptions",
+        "Update pricing",
+        "View and respond to contact form submissions",
+        "Manage working hours and service areas",
+        "Add before/after photos",
+        "Manage testimonials"
+      ],
+      "common_integrations": ["Google Maps", "Google Business Profile", "WhatsApp Business", "Telegram Bot", "Email notifications", "Google Analytics"],
+      "seo_focus": ["local keywords", "city + service combinations", "Google Business Profile", "structured data for local business"]
+    },
+
+    "ecommerce": {
+      "label": "E-Commerce / Online Store",
+      "description": "Businesses selling physical or digital products online",
+      "keywords": ["shop", "store", "sell", "product", "buy", "order", "delivery", "cart", "payment", "catalog", "goods", "merchandise"],
+      "suggested_pages": [
+        {"name": "Home", "purpose": "Featured products, promotions, categories navigation", "priority": "must"},
+        {"name": "Catalog/Shop", "purpose": "All products with filters, sorting, search", "priority": "must"},
+        {"name": "Product Page", "purpose": "Photos, description, price, reviews, add to cart", "priority": "must"},
+        {"name": "Cart", "purpose": "Review items, quantities, total, proceed to checkout", "priority": "must"},
+        {"name": "Checkout", "purpose": "Shipping, payment, order confirmation", "priority": "must"},
+        {"name": "Account/Profile", "purpose": "Order history, addresses, wishlist, settings", "priority": "must"},
+        {"name": "About", "purpose": "Brand story, mission, team", "priority": "should"},
+        {"name": "Contact/Support", "purpose": "Customer service, returns, FAQ", "priority": "must"},
+        {"name": "Shipping & Returns", "purpose": "Policies, delivery times, return process", "priority": "must"},
+        {"name": "Blog", "purpose": "Content marketing, product guides, SEO", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "Product search with filters", "priority": "must", "complexity": "complex"},
+        {"name": "Shopping cart", "priority": "must", "complexity": "complex"},
+        {"name": "Secure payment processing", "priority": "must", "complexity": "complex"},
+        {"name": "User accounts & order tracking", "priority": "must", "complexity": "complex"},
+        {"name": "Product reviews & ratings", "priority": "should", "complexity": "medium"},
+        {"name": "Wishlist/favorites", "priority": "should", "complexity": "medium"},
+        {"name": "Email notifications (order, shipping)", "priority": "must", "complexity": "medium"},
+        {"name": "Inventory management", "priority": "must", "complexity": "complex"},
+        {"name": "Discount codes/promotions", "priority": "should", "complexity": "medium"},
+        {"name": "Related products recommendations", "priority": "nice", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "How many products do you plan to sell? 10s, 100s, or 1000s?",
+        "Physical products, digital, or both?",
+        "What payment methods do you need? (Card, PayPal, crypto, cash on delivery?)",
+        "Do you handle shipping yourself or use a fulfillment service?",
+        "Do you need multiple currencies or languages?",
+        "Do you have product photos ready, or need photography guidance?",
+        "Is there a loyalty/rewards program planned?"
+      ],
+      "design_hints": {
+        "mood": "clean, trustworthy, easy to navigate",
+        "colors": "neutral base with strong accent for CTAs (buy buttons)",
+        "typography": "highly readable, clear price display",
+        "key_element": "Product photography quality is everything",
+        "imagery": "professional product shots on clean backgrounds"
+      },
+      "admin_needs": [
+        "Product management (CRUD, bulk operations)",
+        "Order management and fulfillment",
+        "Inventory tracking",
+        "Customer management",
+        "Discount/promo management",
+        "Sales analytics and reports",
+        "Shipping settings",
+        "Payment configuration"
+      ],
+      "common_integrations": ["Stripe/PayPal", "Shipping APIs", "Email service (Sendgrid/Resend)", "Analytics", "Social media pixel", "Inventory management"],
+      "seo_focus": ["product schema markup", "category page optimization", "product titles and descriptions", "image alt texts", "review schema"]
+    },
+
+    "portfolio": {
+      "label": "Portfolio / Agency / Freelancer",
+      "description": "Showcasing work, services, and expertise for agencies, studios, or individual professionals",
+      "keywords": ["portfolio", "agency", "freelance", "design", "studio", "creative", "work", "project", "client", "case study", "photography", "developer"],
+      "suggested_pages": [
+        {"name": "Home", "purpose": "Striking visual intro, key projects, value proposition", "priority": "must"},
+        {"name": "Work/Portfolio", "purpose": "Project gallery with filters by type/industry", "priority": "must"},
+        {"name": "Case Study (template)", "purpose": "Detailed project breakdown: problem, process, result", "priority": "should"},
+        {"name": "Services", "purpose": "What you offer, how you work, pricing approach", "priority": "must"},
+        {"name": "About", "purpose": "Story, team, values, awards, press", "priority": "must"},
+        {"name": "Contact", "purpose": "Inquiry form, email, social links", "priority": "must"},
+        {"name": "Blog/Journal", "purpose": "Thought leadership, process insights", "priority": "nice"},
+        {"name": "Testimonials", "purpose": "Client quotes, logos, results achieved", "priority": "should"}
+      ],
+      "suggested_features": [
+        {"name": "Project gallery with filtering", "priority": "must", "complexity": "medium"},
+        {"name": "Case study template", "priority": "should", "complexity": "medium"},
+        {"name": "Contact/inquiry form", "priority": "must", "complexity": "simple"},
+        {"name": "Image/video lightbox", "priority": "should", "complexity": "simple"},
+        {"name": "Smooth scroll animations", "priority": "should", "complexity": "medium"},
+        {"name": "Social media integration", "priority": "should", "complexity": "simple"},
+        {"name": "Client testimonial carousel", "priority": "nice", "complexity": "simple"},
+        {"name": "Blog with CMS", "priority": "nice", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "What type of work do you showcase? (design, development, photography, etc.)",
+        "How many projects should be featured? All or curated best?",
+        "Do you want detailed case studies or just visual galleries?",
+        "Do you work solo or have a team to showcase?",
+        "What's your process for new clients? (Do you need a project inquiry form?)",
+        "Do you have a specific visual style or brand guidelines?",
+        "Any awards, publications, or notable clients to highlight?"
+      ],
+      "design_hints": {
+        "mood": "creative, polished, distinctive — your website IS your portfolio",
+        "colors": "should reflect your brand personality, often minimal/bold",
+        "typography": "distinctive, carefully chosen — this shows your taste",
+        "key_element": "the work speaks louder than words — hero visuals matter",
+        "imagery": "your actual work, not stock photos"
+      },
+      "admin_needs": [
+        "Add/edit/reorder portfolio projects",
+        "Upload project images and videos",
+        "Manage case study content",
+        "View inquiry form submissions",
+        "Update team members",
+        "Blog post management"
+      ],
+      "common_integrations": ["Behance/Dribbble", "Instagram feed", "Vimeo/YouTube", "Contact form notifications", "Analytics"],
+      "seo_focus": ["industry-specific keywords", "case study long-form content", "image optimization", "local SEO if location-dependent"]
+    },
+
+    "saas": {
+      "label": "SaaS / Web Application",
+      "description": "Software-as-a-service products with user accounts, dashboards, and subscription billing",
+      "keywords": ["app", "platform", "dashboard", "subscription", "saas", "tool", "software", "automation", "api", "startup", "product"],
+      "suggested_pages": [
+        {"name": "Landing Page", "purpose": "Value proposition, features, social proof, pricing CTA", "priority": "must"},
+        {"name": "Features", "purpose": "Detailed feature breakdown with visuals", "priority": "must"},
+        {"name": "Pricing", "purpose": "Plan comparison, FAQ about billing", "priority": "must"},
+        {"name": "Login/Signup", "purpose": "Clean auth flow with social login options", "priority": "must"},
+        {"name": "Dashboard", "purpose": "Main app interface after login", "priority": "must"},
+        {"name": "Settings/Account", "purpose": "Profile, billing, team management", "priority": "must"},
+        {"name": "Documentation/Help", "purpose": "User guides, API docs, tutorials", "priority": "should"},
+        {"name": "Blog", "purpose": "Product updates, industry content, SEO", "priority": "should"},
+        {"name": "About", "purpose": "Team, mission, investors, careers", "priority": "nice"},
+        {"name": "Changelog", "purpose": "Product updates and release notes", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "User authentication (email + social)", "priority": "must", "complexity": "complex"},
+        {"name": "Subscription billing", "priority": "must", "complexity": "complex"},
+        {"name": "User dashboard", "priority": "must", "complexity": "complex"},
+        {"name": "Team/organization management", "priority": "should", "complexity": "complex"},
+        {"name": "Email notifications", "priority": "must", "complexity": "medium"},
+        {"name": "Usage analytics/tracking", "priority": "should", "complexity": "medium"},
+        {"name": "API access", "priority": "nice", "complexity": "complex"},
+        {"name": "Onboarding flow", "priority": "should", "complexity": "medium"},
+        {"name": "Support/help center", "priority": "should", "complexity": "medium"},
+        {"name": "Admin panel for internal team", "priority": "must", "complexity": "complex"}
+      ],
+      "key_questions": [
+        "What core problem does your product solve? In one sentence.",
+        "Who is the primary user? (Developer, marketer, manager, consumer?)",
+        "What does the main dashboard look like? What data does it show?",
+        "What pricing model? (Free tier, trial, monthly, annual, usage-based?)",
+        "Do users work individually or in teams?",
+        "What integrations are essential at launch?",
+        "Is there an existing MVP or starting from scratch?"
+      ],
+      "design_hints": {
+        "mood": "professional, trustworthy, modern, efficient",
+        "colors": "clean primary color + neutral dashboard palette",
+        "typography": "system fonts or highly readable sans-serif",
+        "key_element": "the landing page conversion funnel is critical",
+        "imagery": "product screenshots, UI mockups, not generic stock"
+      },
+      "admin_needs": [
+        "User management (view, suspend, impersonate)",
+        "Subscription/billing management",
+        "Usage analytics",
+        "Feature flags",
+        "Support ticket management",
+        "System health monitoring"
+      ],
+      "common_integrations": ["Stripe", "Auth0/Supabase Auth", "Sendgrid/Resend", "Intercom/Crisp", "Analytics (Mixpanel/PostHog)", "Sentry"],
+      "seo_focus": ["problem/solution keywords", "comparison pages (vs competitors)", "use case pages", "integration pages", "documentation SEO"]
+    },
+
+    "restaurant": {
+      "label": "Restaurant / Cafe / Food Business",
+      "description": "Restaurants, cafes, bakeries, catering services, and food delivery businesses",
+      "keywords": ["restaurant", "cafe", "food", "menu", "order", "delivery", "reservation", "table", "cuisine", "eat", "drink", "catering", "bakery", "chef"],
+      "suggested_pages": [
+        {"name": "Home", "purpose": "Atmosphere photos, featured dishes, reservation CTA", "priority": "must"},
+        {"name": "Menu", "purpose": "Full menu with categories, prices, dietary info", "priority": "must"},
+        {"name": "About", "purpose": "Story, chef, philosophy, atmosphere", "priority": "should"},
+        {"name": "Reservations", "purpose": "Table booking form or integration", "priority": "should"},
+        {"name": "Gallery", "purpose": "Food photography, interior, events", "priority": "should"},
+        {"name": "Contact/Location", "purpose": "Address, map, hours, phone, parking info", "priority": "must"},
+        {"name": "Events/Private Dining", "purpose": "Catering, private events, special menus", "priority": "nice"},
+        {"name": "Online Order", "purpose": "Takeout/delivery ordering system", "priority": "nice"},
+        {"name": "Reviews", "purpose": "Customer testimonials, press mentions", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "Visual menu display", "priority": "must", "complexity": "medium"},
+        {"name": "Reservation form/widget", "priority": "should", "complexity": "medium"},
+        {"name": "Google Maps with directions", "priority": "must", "complexity": "simple"},
+        {"name": "Photo gallery", "priority": "should", "complexity": "simple"},
+        {"name": "Working hours with holiday schedule", "priority": "must", "complexity": "simple"},
+        {"name": "Online ordering integration", "priority": "nice", "complexity": "complex"},
+        {"name": "Instagram feed integration", "priority": "nice", "complexity": "simple"},
+        {"name": "Newsletter signup", "priority": "nice", "complexity": "simple"},
+        {"name": "Dietary filter (vegan, gluten-free)", "priority": "should", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "What type of cuisine do you serve?",
+        "Do you have a digital menu (PDF, photos) or need one created?",
+        "Do you take reservations? If so, how — phone, app, website form?",
+        "Do you offer delivery or takeout? Through which services?",
+        "What's the atmosphere — casual, fine dining, fast casual?",
+        "Do you have professional food photography?",
+        "Do you host private events or catering?"
+      ],
+      "design_hints": {
+        "mood": "warm, appetizing, inviting — should make people hungry",
+        "colors": "warm tones (deep reds, ambers, creams), dark backgrounds make food pop",
+        "typography": "elegant serif for headings, clean sans for body",
+        "key_element": "food photography is EVERYTHING — poor photos will kill the site",
+        "imagery": "professional food photography, interior shots, team"
+      },
+      "admin_needs": [
+        "Menu management (add/edit dishes, prices, categories)",
+        "Photo gallery management",
+        "Reservation viewing/management",
+        "Working hours and special schedule",
+        "Event/special menu updates",
+        "Contact information updates"
+      ],
+      "common_integrations": ["Google Maps", "OpenTable/Resy", "Uber Eats/DoorDash", "Instagram", "Google Business", "Email marketing"],
+      "seo_focus": ["local + cuisine keywords", "Google Business Profile", "menu schema markup", "review schema", "location-based optimization"]
+    },
+
+    "blog_media": {
+      "label": "Blog / Media / Content Platform",
+      "description": "Content-focused websites including blogs, news sites, magazines, and educational platforms",
+      "keywords": ["blog", "news", "article", "content", "magazine", "publish", "write", "media", "journal", "education", "course", "tutorial"],
+      "suggested_pages": [
+        {"name": "Home/Feed", "purpose": "Latest content, featured posts, category navigation", "priority": "must"},
+        {"name": "Article/Post", "purpose": "Individual content page with rich formatting", "priority": "must"},
+        {"name": "Categories/Topics", "purpose": "Browse by topic, tag, or section", "priority": "must"},
+        {"name": "About", "purpose": "Mission, team/authors, editorial policy", "priority": "should"},
+        {"name": "Contact", "purpose": "Tips, submissions, partnerships, press", "priority": "should"},
+        {"name": "Newsletter", "purpose": "Email subscription landing page", "priority": "should"},
+        {"name": "Author Profile", "purpose": "Bio, articles by author, social links", "priority": "nice"},
+        {"name": "Search Results", "purpose": "Full-text content search", "priority": "should"},
+        {"name": "Archive", "purpose": "Historical content browsing", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "Rich content editor (CMS)", "priority": "must", "complexity": "complex"},
+        {"name": "Category/tag system", "priority": "must", "complexity": "medium"},
+        {"name": "Search functionality", "priority": "must", "complexity": "medium"},
+        {"name": "Newsletter/email subscription", "priority": "should", "complexity": "medium"},
+        {"name": "Social sharing buttons", "priority": "should", "complexity": "simple"},
+        {"name": "Comments system", "priority": "nice", "complexity": "medium"},
+        {"name": "Related articles", "priority": "should", "complexity": "medium"},
+        {"name": "Reading time estimate", "priority": "nice", "complexity": "simple"},
+        {"name": "RSS feed", "priority": "nice", "complexity": "simple"},
+        {"name": "SEO meta management per post", "priority": "must", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "What topics will you cover? Is there a specific niche?",
+        "How many authors/contributors will publish content?",
+        "How often will new content be published?",
+        "Do you plan to monetize? (Ads, subscriptions, sponsored content?)",
+        "Do you need comments or community features?",
+        "Is there existing content to migrate?",
+        "Do you need a newsletter/email digest?"
+      ],
+      "design_hints": {
+        "mood": "clean, readable, content-first",
+        "colors": "high contrast for readability, subtle accent colors",
+        "typography": "readability is paramount — serif or clean sans, proper line height",
+        "key_element": "reading experience must be distraction-free",
+        "imagery": "featured images for articles, clean whitespace"
+      },
+      "admin_needs": [
+        "Rich text editor for posts",
+        "Media library management",
+        "Category/tag management",
+        "Author management",
+        "Comment moderation",
+        "SEO meta per article",
+        "Publication scheduling",
+        "Analytics per article"
+      ],
+      "common_integrations": ["Email service (Mailchimp/ConvertKit)", "Analytics", "Social media auto-posting", "Comment system (Disqus)", "CDN for media"],
+      "seo_focus": ["article schema markup", "long-tail keyword strategy", "internal linking", "sitemap", "social meta tags"]
+    },
+
+    "corporate": {
+      "label": "Corporate / Business Website",
+      "description": "Company presence websites for established businesses, B2B companies, and organizations",
+      "keywords": ["company", "corporate", "business", "enterprise", "organization", "firm", "industry", "professional", "b2b", "partner", "solution"],
+      "suggested_pages": [
+        {"name": "Home", "purpose": "Company overview, key services, trust signals, CTA", "priority": "must"},
+        {"name": "About", "purpose": "History, mission, values, leadership team", "priority": "must"},
+        {"name": "Services/Solutions", "purpose": "Detailed service offerings with benefits", "priority": "must"},
+        {"name": "Industries/Use Cases", "purpose": "How you serve different verticals", "priority": "should"},
+        {"name": "Case Studies", "purpose": "Success stories with metrics and results", "priority": "should"},
+        {"name": "Team/Leadership", "purpose": "Key people with bios and photos", "priority": "should"},
+        {"name": "Careers", "purpose": "Open positions, culture, benefits", "priority": "nice"},
+        {"name": "Contact", "purpose": "Offices, form, phone, map", "priority": "must"},
+        {"name": "Blog/News", "purpose": "Company news, industry insights", "priority": "should"},
+        {"name": "Partners", "purpose": "Technology partners, certifications, affiliations", "priority": "nice"}
+      ],
+      "suggested_features": [
+        {"name": "Professional contact form", "priority": "must", "complexity": "simple"},
+        {"name": "Team/leadership profiles", "priority": "should", "complexity": "simple"},
+        {"name": "Case study template", "priority": "should", "complexity": "medium"},
+        {"name": "Career listings management", "priority": "nice", "complexity": "medium"},
+        {"name": "Newsletter signup", "priority": "should", "complexity": "simple"},
+        {"name": "Multi-location support", "priority": "nice", "complexity": "medium"},
+        {"name": "Client logos showcase", "priority": "should", "complexity": "simple"},
+        {"name": "Annual report/downloads", "priority": "nice", "complexity": "simple"},
+        {"name": "Blog with CMS", "priority": "should", "complexity": "medium"}
+      ],
+      "key_questions": [
+        "What does your company do? What industry are you in?",
+        "Who is your target client/customer? (B2B, B2C, government?)",
+        "How many office locations do you have?",
+        "Do you have existing brand guidelines (logos, colors, fonts)?",
+        "What's the primary goal of the website — lead generation, information, recruitment?",
+        "Do you need multiple languages for international presence?",
+        "Are there compliance or regulatory requirements for your industry?"
+      ],
+      "design_hints": {
+        "mood": "professional, established, trustworthy, authoritative",
+        "colors": "navy, dark grays, white — with corporate accent color",
+        "typography": "professional sans-serif, consistent hierarchy",
+        "key_element": "credibility signals — client logos, numbers, certifications",
+        "imagery": "professional photography of team, offices, not just stock"
+      },
+      "admin_needs": [
+        "Page content management",
+        "Team member management",
+        "Case study management",
+        "Blog/news management",
+        "Career listings",
+        "Contact form submissions",
+        "File/document management"
+      ],
+      "common_integrations": ["CRM (HubSpot/Salesforce)", "Email marketing", "LinkedIn", "Google Analytics", "Google Tag Manager", "Applicant tracking"],
+      "seo_focus": ["industry + service keywords", "location-based pages", "case study optimization", "structured data for organization", "Google Business for locations"]
+    }
+  },
+
+  "classification_rules": {
+    "instructions": "Classify the user's first message into one of the niche types above. If unclear, ask one clarifying question. If the business spans multiple niches, pick the PRIMARY one and note secondary aspects.",
+    "fallback": "If no niche matches well, use 'corporate' as the default template and ask clarifying questions to narrow down.",
+    "multi_niche_examples": [
+      "A bakery that sells online → primary: restaurant, secondary: ecommerce",
+      "A design agency with a blog → primary: portfolio, secondary: blog_media",
+      "A SaaS with an e-commerce marketplace → primary: saas, secondary: ecommerce"
+    ]
+  }
+}

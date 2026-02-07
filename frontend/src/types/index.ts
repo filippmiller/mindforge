@@ -1,6 +1,8 @@
 export interface Session {
   id: string;
   name: string;
+  niche_type?: string;
+  current_phase?: number;
   created_at: string;
   updated_at: string;
   completion_pct: number;
@@ -34,4 +36,10 @@ export interface SSEEvent {
 
 export type OrbState = "idle" | "listening" | "processing" | "thinking";
 
-export type ThinkingPhase = "analysis" | "gaps" | "insights" | "questions" | "whitepaper_update" | "new_rules";
+export type ThinkingPhase = "analysis" | "gaps" | "insights" | "questions" | "whitepaper_update" | "new_rules" | "user_message";
+
+export interface PhaseInfo {
+  current_phase: number;
+  phase_name: string;
+  next_milestone: string;
+}

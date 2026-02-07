@@ -80,3 +80,41 @@ Deployed frontend to Railway. Fixed TypeScript build failure (Web Speech API typ
 → `.claude/sessions/2026-02-07-session2.md`
 
 ---
+
+## [2026-02-07 19:00] — Wizzard UX Improvements (10 Changes)
+
+**Area:** Frontend/UX, Frontend/Components, Backend/Streaming
+**Type:** feature
+
+### Files Changed
+- `frontend/src/types/index.ts` — Added `user_message` phase, `PhaseInfo` interface, optional `niche_type`/`current_phase` on Session
+- `frontend/src/stores/sessionStore.ts` — Added `setThinkingBlocks`, `phaseInfo`, `lastMessage` state; exported `ThinkingBlock` type
+- `frontend/src/main.tsx` — Wrapped app with ErrorBoundary
+- `frontend/src/App.tsx` — History loading on session switch, user messages in stream, retry logic, auto-naming, error state
+- `frontend/src/components/ThinkingStream.tsx` — Full rewrite: markdown rendering, collapsible blocks, copy buttons, user message bubbles, phase indicator
+- `frontend/src/components/ErrorBoundary.tsx` — New: crash recovery component
+- `frontend/src/index.css` — Added `.tag-user`, `.thinking-markdown` styles
+
+### Functions/Symbols Modified
+- `ThinkingBlock` (`sessionStore.ts`) — exported interface for external use
+- `useSessionStore` (`sessionStore.ts`) — added `setThinkingBlocks()`, `phaseInfo`, `setPhaseInfo()`, `lastMessage`, `setLastMessage()`
+- `loadSessionHistory()` (`App.tsx`) — new, reconstructs thinking blocks from API history
+- `handleSelectSession()` (`App.tsx`) — now loads conversation history from database
+- `sendMessage()` (`App.tsx`) — adds user_message block, stores lastMessage, auto-names sessions
+- `handleRetry()` (`App.tsx`) — new, retries failed messages
+- `handleTextSubmit()` (`App.tsx`) — now auto-creates session if none exists
+- `ThinkingBlockItem` (`ThinkingStream.tsx`) — new, renders individual block with collapse/expand
+- `CopyButton` (`ThinkingStream.tsx`) — new, clipboard copy with checkmark feedback
+- `ThinkingStream` (`ThinkingStream.tsx`) — rewritten with markdown, collapsible, phase indicator
+- `ErrorBoundary` (`ErrorBoundary.tsx`) — new, React class component for crash recovery
+
+### Database Tables
+- N/A (no schema changes; history endpoint already existed)
+
+### Summary
+Implemented 10 UX improvements from `/wizzard` analysis: (1) conversation history persists across session switches, (2) auto-naming from first message, (3) text input visible by default, (4) error boundary prevents white-screen crashes, (5) retry button on stream failure, (6) user messages shown in thinking stream, (7) markdown rendering in AI blocks, (8) phase indicator integration, (9) collapsible thinking blocks, (10) copy button on each block. TypeScript compiles clean, Vite build succeeds.
+
+### Session Notes
+→ `.claude/sessions/2026-02-07-session3.md`
+
+---

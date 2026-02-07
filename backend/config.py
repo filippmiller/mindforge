@@ -1,7 +1,10 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).parent
 
 
 class Settings:
@@ -11,7 +14,9 @@ class Settings:
     BRAINSTORM_MODEL: str = "claude-sonnet-4-20250514"
     WHITEPAPER_MODEL: str = "claude-opus-4-6"
     MAX_QUESTIONS_PER_TURN: int = 7
-    RULES_FILE: str = os.path.join(os.path.dirname(__file__), "rules", "brainstorm_rules.json")
+    RULES_FILE: str = str(BASE_DIR / "rules" / "brainstorm_rules.json")
+    NICHE_TEMPLATES_FILE: str = str(BASE_DIR / "rules" / "niche_templates.json")
+    BASE_DIR: Path = BASE_DIR
 
 
 settings = Settings()

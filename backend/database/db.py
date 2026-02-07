@@ -19,6 +19,8 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS sessions (
                 id TEXT PRIMARY KEY,
                 name TEXT NOT NULL DEFAULT 'Untitled Project',
+                niche_type TEXT,
+                current_phase INTEGER DEFAULT 1,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 completion_pct REAL DEFAULT 0.0,
@@ -57,5 +59,26 @@ async def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 active INTEGER DEFAULT 1
             );
+
+            CREATE TABLE IF NOT EXISTS competitor_analyses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id TEXT NOT NULL,
+                query TEXT NOT NULL,
+                results TEXT NOT NULL DEFAULT '[]',
+                summary TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (session_id) REFERENCES sessions(id)
+            );
         """)
+
+        # Migrations for existing databases
+        try:
+            await db.execute("ALTER TABLE sessions ADD COLUMN niche_type TEXT")
+        except Exception:
+            pass
+        try:
+            await db.execute("ALTER TABLE sessions ADD COLUMN current_phase INTEGER DEFAULT 1")
+        except Exception:
+            pass
+
         await db.commit()

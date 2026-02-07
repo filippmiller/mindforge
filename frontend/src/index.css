@@ -123,6 +123,18 @@ body {
 .tag-gap { color: var(--forge-amber); border-color: rgba(255, 170, 0, 0.3); background: rgba(255, 170, 0, 0.08); }
 .tag-insight { color: var(--forge-green); border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.08); }
 .tag-question { color: #c084fc; border-color: rgba(192, 132, 252, 0.3); background: rgba(192, 132, 252, 0.08); }
+.tag-user { color: #e0e0e8; border-color: rgba(224, 224, 232, 0.2); background: rgba(224, 224, 232, 0.05); }
+
+/* Markdown inside thinking blocks */
+.thinking-markdown p { margin-bottom: 0.5em; }
+.thinking-markdown p:last-child { margin-bottom: 0; }
+.thinking-markdown ul, .thinking-markdown ol { margin: 0.5em 0; padding-left: 1.5em; }
+.thinking-markdown li { margin-bottom: 0.25em; }
+.thinking-markdown strong { color: #e0e0e8; }
+.thinking-markdown em { color: rgba(224, 224, 232, 0.7); }
+.thinking-markdown code { color: var(--forge-cyan); font-size: 0.85em; background: rgba(0, 240, 255, 0.08); padding: 0.1em 0.3em; border-radius: 3px; }
+.thinking-markdown h1, .thinking-markdown h2, .thinking-markdown h3 { color: #e0e0e8; margin: 0.75em 0 0.25em; font-size: 1em; font-weight: 600; }
+.thinking-markdown blockquote { border-left: 2px solid var(--forge-cyan); padding-left: 0.75em; margin: 0.5em 0; color: rgba(224, 224, 232, 0.7); }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
