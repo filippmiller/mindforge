@@ -44,7 +44,7 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
         setInterimTranscript(interim);
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error("Speech recognition error:", event.error);
         if (event.error !== "no-speech") {
           setIsListening(false);
@@ -104,10 +104,3 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
   };
 }
 
-// Type declarations for Web Speech API
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
-}
